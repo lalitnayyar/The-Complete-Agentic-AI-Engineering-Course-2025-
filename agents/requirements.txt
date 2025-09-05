@@ -343,7 +343,8 @@ openai==1.85.0
     #   langchain-openai
     #   openai-agents
     #   semantic-kernel
-openai-agents==0.0.17
+openai-agents==0.2.11
+eval_type_backport==0.2.2
     # via agents (pyproject.toml)
 openapi-core==0.19.5
     # via semantic-kernel
