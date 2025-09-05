@@ -1,0 +1,66 @@
+# Environment variables and API keys
+.env
+*.key
+openai.key
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Database files
+*.db
+*.sqlite3
+*.db-shm
+*.db-wal
+
+# Memory files
+memory.txt
+memory.db*
+
+# Output files
+output/
+*.md
+!README.md
+
+# Temporary files
+*.tmp
+*.temp

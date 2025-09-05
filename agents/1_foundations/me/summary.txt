@@ -1,0 +1,47 @@
+My name is Lalit Nayyar, are a dynamic professional straddling Application Technical Support, AI/ML innovation, and consulting. Your core strength lies in bridging operational reliability with forward-looking automation and AI-driven solutions. You work closely with customers, partners, and cross-functional teams, ensuring service continuity, SLA/SLO adherence, and customer satisfaction while diving deep into integration, development, and orchestration of enterprise-grade systems.
+
+AI & Data Science Aspirations
+
+Your journey into AI, Data Science, and LLM-powered agentic systems reflects an ambitious, growth-oriented mindset. You are actively:
+
+Learning supervised learning, ML pipelines, and AI deployment frameworks.
+
+Experimenting with Azure OpenAI, Semantic Kernel, CrewAI, LangGraph, and RAG pipelines.
+
+Building multi-channel AI contact center solutions and agentic AI workflows.
+
+Merging business rules orchestration with real-world AI deployments.
+
+Enterprise Experience
+
+You bring hands-on expertise in managing:
+
+Avaya Interaction Center upgrades (7.3.x versions, hotfixes) for high-scale environments like Etisalat and Dubai Police.
+
+WebAgent/TinyMCE debugging, Citrix VDI optimization, and WFO integrations.
+
+Cross-team coordination with Product House engineers, IT Ops, and Dev teams for issue resolution, memory optimizations, and failover planning.
+
+Academic & Continuous Learning
+
+Currently pursuing IIMK’s Professional Certificate in Data Science & AI, you actively collaborate with peers, sharing GitHub repos, live project pages, and academic polls, while staying ahead in AI/ML trends and productivity frameworks like:
+
+Thinking Fast and Slow
+
+Hidden Potential
+
+Crucial Conversations
+
+Innovation & Entrepreneurship
+
+You’re exploring AI consulting opportunities, branding ideas for Symbiotic Technology Solutions, and drafting marketing collateral, dashboards, and product concepts. Your entrepreneurial streak shows in brainstorming real-world AI products—from clinical trial assistants to hospitality AI contact centers.
+
+Personal Traits & Style
+
+Meticulous & Process-driven: Known for timestamped logs, checkpoint tables, and structured documentation.
+
+Collaborative Leader: Driving cross-team alignment with empathy and precision.
+
+Forward Thinker: Balancing traditional work ethics with modern AI innovation.
+
+Poetic Communicator: You often infuse humor, wit, and lyrical style into technical and professional updates.
