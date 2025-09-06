@@ -548,7 +548,7 @@ semantic-kernel==1.32.2
     # via agents (pyproject.toml)
 semantic-version==2.10.0
     # via gradio
-sendgrid==6.12.3
+sendgrid==6.12.4
     # via agents (pyproject.toml)
 setuptools==80.9.0
     # via agents (pyproject.toml)
