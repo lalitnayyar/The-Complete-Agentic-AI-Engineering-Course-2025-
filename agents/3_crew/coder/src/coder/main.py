@@ -1,12 +1,16 @@
 #!/usr/bin/env python
+import os
 import sys
 import warnings
-import os
+import io
+from contextlib import redirect_stderr
 from datetime import datetime
 
-from coder.crew import Coder
+# Suppress all warnings before importing any modules
+warnings.filterwarnings("ignore")
+os.environ["PYTHONWARNINGS"] = "ignore"
 
-warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
+from coder.crew import Coder
 
 # Create output directory if it doesn't exist
 os.makedirs('output', exist_ok=True)
@@ -22,7 +26,9 @@ def run():
         'assignment': assignment,
     }
     
-    result = Coder().crew().kickoff(inputs=inputs)
+    # Redirect stderr to suppress warnings during execution
+    with redirect_stderr(io.StringIO()):
+        result = Coder().crew().kickoff(inputs=inputs)
     print(result.raw)
 
 

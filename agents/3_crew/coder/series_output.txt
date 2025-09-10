@@ -1,0 +1,14 @@
+Python code:
+def calculate_series(n):
+    total = 0.0
+    for i in range(n):
+        term = (-1)**i / (2 * i + 1)
+        total += term
+    return total * 4
+
+n_terms = 10000
+result = calculate_series(n_terms)
+print(f"Approximation of pi using {n_terms} terms: {result}")
+
+Output:
+Approximation of pi using 10000 terms: 3.1414926535900345
