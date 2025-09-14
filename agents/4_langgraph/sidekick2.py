@@ -4,7 +4,6 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
 from dotenv import load_dotenv
 from langgraph.prebuilt import ToolNode
-from langchain_core.messages import ToolMessage
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
@@ -56,8 +55,6 @@ class Sidekick:
         await self.build_graph()
 
     def worker(self, state: State) -> Dict[str, Any]:
-        print(f"🤖 [WORKER] Starting worker with success criteria: {state['success_criteria']}")
-        
         system_message = f"""You are a helpful assistant that can use tools to complete tasks.
     You keep working on a task until either you have a question or clarification for the user, or the success criteria is met.
     You have many tools to help you, including tools to browse the internet, navigating and retrieving web pages.
@@ -75,7 +72,6 @@ class Sidekick:
     """
 
         if state.get("feedback_on_work"):
-            print(f"🔄 [WORKER] Applying feedback: {state['feedback_on_work'][:100]}...")
             system_message += f"""
     Previously you thought you completed the assignment, but your reply was rejected because the success criteria was not met.
     Here is the feedback on why this was rejected:
@@ -83,8 +79,7 @@ class Sidekick:
     With this feedback, please continue the assignment, ensuring that you meet the success criteria or have a question for the user."""
 
         # Add in the system message
-        print(f"📝 [WORKER] Processing {len(state['messages'])} messages")
-        
+
         found_system_message = False
         messages = state["messages"]
         for message in messages:
@@ -96,16 +91,7 @@ class Sidekick:
             messages = [SystemMessage(content=system_message)] + messages
 
         # Invoke the LLM with tools
-        print(f"🧠 [WORKER] Invoking LLM with {len(self.tools)} available tools")
         response = self.worker_llm_with_tools.invoke(messages)
-        
-        # Log the response type
-        if hasattr(response, 'tool_calls') and response.tool_calls:
-            print(f"🔧 [WORKER] LLM wants to use {len(response.tool_calls)} tools")
-            for tool_call in response.tool_calls:
-                print(f"   - {tool_call['name']}: {tool_call['args']}")
-        else:
-            print(f"💬 [WORKER] LLM generated text response: {response.content[:100]}...")
 
         # Return updated state
         return {
@@ -116,10 +102,8 @@ class Sidekick:
         last_message = state["messages"][-1]
 
         if hasattr(last_message, "tool_calls") and last_message.tool_calls:
-            print(f"🔀 [ROUTER] Routing to tools execution")
             return "tools"
         else:
-            print(f"🔀 [ROUTER] Routing to evaluator")
             return "evaluator"
 
     def format_conversation(self, messages: List[Any]) -> str:
@@ -134,7 +118,6 @@ class Sidekick:
 
     def evaluator(self, state: State) -> State:
         last_response = state["messages"][-1].content
-        print(f"⚖️ [EVALUATOR] Evaluating response: {last_response[:100]}...")
 
         system_message = """You are an evaluator that determines if a task has been completed successfully by an Assistant.
     Assess the Assistant's last response based on the given criteria. Respond with your feedback, and with your decision on whether the success criteria has been met,
@@ -167,14 +150,7 @@ class Sidekick:
             HumanMessage(content=user_message),
         ]
 
-        print(f"🧠 [EVALUATOR] Invoking evaluator LLM")
         eval_result = self.evaluator_llm_with_output.invoke(evaluator_messages)
-        
-        print(f"📊 [EVALUATOR] Results:")
-        print(f"   - Success criteria met: {eval_result.success_criteria_met}")
-        print(f"   - User input needed: {eval_result.user_input_needed}")
-        print(f"   - Feedback: {eval_result.feedback[:100]}...")
-        
         new_state = {
             "messages": [
                 {
@@ -190,38 +166,9 @@ class Sidekick:
 
     def route_based_on_evaluation(self, state: State) -> str:
         if state["success_criteria_met"] or state["user_input_needed"]:
-            print(f"🏁 [ROUTER] Task completed or needs user input - ending")
             return "END"
         else:
-            print(f"🔄 [ROUTER] Task needs more work - returning to worker")
             return "worker"
-
-    def tools_with_progress(self, state: State) -> Dict[str, Any]:
-        """Custom tool node with progress logging"""
-        print(f"🔧 [TOOLS] Executing tools...")
-        
-        # Get the last message which should contain tool calls
-        last_message = state["messages"][-1]
-        
-        if hasattr(last_message, "tool_calls") and last_message.tool_calls:
-            print(f"🔧 [TOOLS] Found {len(last_message.tool_calls)} tool calls to execute")
-            
-            for i, tool_call in enumerate(last_message.tool_calls):
-                print(f"🔧 [TOOLS] Executing tool {i+1}/{len(last_message.tool_calls)}: {tool_call['name']}")
-                print(f"   - Args: {tool_call['args']}")
-        
-        # Use the standard ToolNode to execute tools
-        tool_node = ToolNode(tools=self.tools)
-        result = tool_node.invoke(state)
-        
-        # Log the results
-        if "messages" in result:
-            for message in result["messages"]:
-                if isinstance(message, ToolMessage):
-                    print(f"✅ [TOOLS] Tool {message.tool_call_id} completed")
-                    print(f"   - Result: {message.content[:100]}...")
-        
-        return result
 
     async def build_graph(self):
         # Set up Graph Builder with State
@@ -229,7 +176,7 @@ class Sidekick:
 
         # Add nodes
         graph_builder.add_node("worker", self.worker)
-        graph_builder.add_node("tools", self.tools_with_progress)
+        graph_builder.add_node("tools", ToolNode(tools=self.tools))
         graph_builder.add_node("evaluator", self.evaluator)
 
         # Add edges
@@ -246,11 +193,6 @@ class Sidekick:
         self.graph = graph_builder.compile(checkpointer=self.memory)
 
     async def run_superstep(self, message, success_criteria, history):
-        print(f"🚀 [SUPERSTEP] Starting new superstep")
-        print(f"📝 [SUPERSTEP] Message: {message[:100]}...")
-        print(f"🎯 [SUPERSTEP] Success criteria: {success_criteria}")
-        print(f"📚 [SUPERSTEP] History length: {len(history) if history else 0}")
-        
         config = {"configurable": {"thread_id": self.sidekick_id}}
 
         state = {
@@ -260,32 +202,11 @@ class Sidekick:
             "success_criteria_met": False,
             "user_input_needed": False,
         }
-        
-        print(f"🔄 [SUPERSTEP] Invoking graph with {len(self.tools)} tools available")
         result = await self.graph.ainvoke(state, config=config)
-        
-        print(f"✅ [SUPERSTEP] Graph execution completed")
-        print(f"📊 [SUPERSTEP] Final state:")
-        print(f"   - Messages count: {len(result['messages'])}")
-        print(f"   - Success criteria met: {result.get('success_criteria_met', 'N/A')}")
-        print(f"   - User input needed: {result.get('user_input_needed', 'N/A')}")
-        
-        # Convert to Gradio tuple format: [user_message, assistant_message]
-        user_message = message
-        reply_content = result["messages"][-2].content if len(result["messages"]) >= 2 else "No response generated"
-        feedback_content = result["messages"][-1].content if len(result["messages"]) >= 1 else "No feedback available"
-        
-        print(f"💬 [SUPERSTEP] Final reply: {reply_content[:100]}...")
-        print(f"📝 [SUPERSTEP] Final feedback: {feedback_content[:100]}...")
-        
-        # Return in Gradio tuple format: [user_message, assistant_message]
-        new_messages = [
-            [user_message, None],  # User message
-            [None, reply_content],  # Assistant reply
-            [None, feedback_content]  # Assistant feedback
-        ]
-        
-        return history + new_messages
+        user = {"role": "user", "content": message}
+        reply = {"role": "assistant", "content": result["messages"][-2].content}
+        feedback = {"role": "assistant", "content": result["messages"][-1].content}
+        return history + [user, reply, feedback]
 
     def cleanup(self):
         if self.browser:
