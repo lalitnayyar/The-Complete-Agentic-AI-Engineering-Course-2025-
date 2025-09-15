@@ -43,18 +43,20 @@ In the terminal, run:
 
 This should give you a path to node running on your WSL subsystem. Suppose it's something like:  
 `/home/user/.nvm/versions/node/v22.18.0/bin`
-
+/usr/bin/node
 Then run this command, carefully replacing the path here with your one:   
 `!export PATH="/home/user/.nvm/versions/node/v22.18.0/bin:$PATH"`  
-
+`!export PATH="/usr/bin/node:$PATH"`
 Also this, again carefully replacing the path with your one:  
 `os.environ["PATH"] = "/home/user/.nvm/versions/node/v22.18.0/bin:" + os.environ["PATH"]`
 
+`os.environ["PATH"] = "/usr/bin/node:" + os.environ["PATH"]`
 And then try the prior cell again.  
 And if even that doesn't work, try changing the MCP params with the full path of npx:
 
 ```python
 playwright_params = {"command": "/home/user/.nvm/versions/node/v22.18.0/bin/npx","args": [ "@playwright/mcp@latest"]}
+playwright_params = {"command": "/usr/bin/node","args": [ "@playwright/mcp@latest"]}
 ```
 
 And / or this approach:

@@ -1,27 +1,22 @@
 # Banoffee Pie Recipe
 
 ## Ingredients
-- 4 bananas, sliced
-- 394g caramel or dulce de leche
-- 300ml double cream
-- Dark chocolate (optional)
+- 200g digestive biscuits or graham crackers
+- 100g unsalted butter, melted
+- 1 can (397g) sweetened condensed milk (for toffee)
+- 3 ripe bananas
+- 300ml whipping cream
+- 2 tbsp icing sugar
+- 1 tsp vanilla extract
+- Dark chocolate or cocoa powder, for garnish
 
-### For the pastry
-- 100g butter, chilled (plus extra for greasing)
-- 200g plain flour
-- 1 medium egg, separated
-- 1 tbsp golden caster sugar
+## Instructions
+1. **Prepare the base**: Crush the biscuits into fine crumbs. Mix with melted butter until combined. Press the mixture firmly into the base of a 23cm (9-inch) pie dish. Chill in the fridge for 30 minutes.
 
-## Method
-1. Make the pastry case: Put butter and flour in a food processor and pulse until it resembles fresh breadcrumbs. Add egg yolk and sugar, pulse again, then add very cold water a tbsp at a time until dough comes together.
-2. Knead dough gently by hand until smooth ball forms. Wrap in cling film and chill for 30 minutes.
-3. Heat oven to 190C/170C fan/gas 4. Grease a 23cm loose bottomed fluted tart tin. Roll out pastry and line the tin, leaving about 0.5cm of pastry over the edge and snip to length.
-4. Line base with baking parchment and weigh down with baking beans/uncooked rice. Bake for 15 minutes. Remove parchment and beans, brush pastry with beaten egg white and bake another 15-20 minutes until golden and cooked. Cool completely.
-5. Spread half the caramel on the pastry case, layer bananas on top, then cover with remaining caramel. Chill in fridge.
-6. Whip the cream until thick and spoon over the tart. Grate dark chocolate over to garnish if using.
+2. **Make the toffee**: Boil the can of sweetened condensed milk in a pot of water for 2-3 hours. Make sure the can is fully submerged at all times, topping up water if needed. Alternatively, use ready-made dulce de leche. Let it cool.
 
-## Notes
-- Serves 8-10.
-- Prep time: 30 minutes.
-- Cook time: 30-35 minutes.
-- An easy family favorite. Recommended to serve with a generous dollop of cream.
+3. **Assemble the pie**: Slice the bananas and arrange them evenly over the chilled biscuit base. Spread the toffee (dulce de leche) evenly over the bananas.
+
+4. **Whip the cream**: Whip the cream with icing sugar and vanilla extract until soft peaks form. Spread the cream over the toffee layer.
+
+5. **Garnish and serve**: Grate dark chocolate or dust cocoa powder over the cream. Chill for at least 1 hour before serving.
