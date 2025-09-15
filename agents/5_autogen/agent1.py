@@ -4,8 +4,6 @@ import random
 import os
 from dotenv import load_dotenv
 import logging
-from message_tracker import message_tracker
-from message_visualizer import message_visualizer
 
 load_dotenv(override=True)
 
@@ -14,17 +12,17 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 class Agent:
-    """Creative entrepreneur agent for generating business ideas"""
+    """Innovative fintech strategist agent for creating financial technology solutions"""
 
     # Change this system message to reflect the unique characteristics of this agent
     system_message = """
-    You are a creative entrepreneur. Your task is to come up with a new business idea using Agentic AI, or refine an existing idea.
-    Your personal interests are in these sectors: Healthcare, Education.
-    You are drawn to ideas that involve disruption.
-    You are less interested in ideas that are purely automation.
-    You are optimistic, adventurous and have risk appetite. You are imaginative - sometimes too much so.
-    Your weaknesses: you're not patient, and can be impulsive.
-    You should respond with your business ideas in an engaging and clear way.
+    You are an innovative fintech strategist. Your mission is to design novel financial technology solutions that improve accessibility and security.
+    Your main interests lie in sectors: Banking, Insurance, and Cryptocurrency.
+    You favor ideas that emphasize user trust and seamless integration.
+    You prefer solutions that go beyond traditional automation, focusing on innovation and customer empowerment.
+    You are analytical, detail-oriented, and cautious in risk-taking.
+    Your weakness: sometimes overly conservative and slow to pivot.
+    Communicate your fintech ideas clearly and persuasively.
     """
 
     CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.5
@@ -35,15 +33,8 @@ class Agent:
         self.runtime = None
         logger.info(f"🤖 Created agent: {name}")
         
-        # Register agent with message tracker
-        message_tracker.register_agent(
-            agent_id=name,
-            name=name,
-            agent_type="entrepreneur"
-        )
-        
         self._delegate = AssistantAgent(
-            name, 
+            name,
             llm_config={
                 "model": "gpt-4.1-mini",
                 "api_key": os.getenv("OPENAI_API_KEY"),
@@ -80,44 +71,11 @@ class Agent:
             logger.error(f"❌ Agent {self.name} has no runtime access")
             return messages.Message(content="❌ No runtime available")
         
-        # Start tracking message exchange
-        exchange_id = message_tracker.start_message_exchange(
-            originator_id=self.name,
-            target_id=agent_id.key,
-            message_type="idea_exchange",
-            content=message.content
-        )
-        
         logger.info(f"📤 {self.name} sending message to {agent_id.type}_{agent_id.key}")
-        
-        try:
-            response = await self.runtime.send_message(message, agent_id)
-            
-            # Complete message exchange tracking
-            message_tracker.complete_message_exchange(
-                exchange_id=exchange_id,
-                status="processed",
-                response_content=response.content
-            )
-            
-            # Display message flow visualization
-            exchange = message_tracker._find_exchange(exchange_id)
-            if exchange:
-                message_visualizer.display_message_flow(exchange, show_content=False)
-            
-            return response
-            
-        except Exception as e:
-            # Mark exchange as failed
-            message_tracker.complete_message_exchange(
-                exchange_id=exchange_id,
-                status="failed"
-            )
-            logger.error(f"❌ Message exchange failed: {e}")
-            raise
+        return await self.runtime.send_message(message, agent_id)
 
     async def handle_message(self, message: messages.Message, ctx=None) -> messages.Message:
-        """Handle incoming messages and generate business ideas"""
+        """Handle incoming messages and generate fintech solutions"""
         logger.info(f"📨 {self.name} received message: {message.content[:50]}...")
         
         # Generate initial idea
@@ -130,7 +88,7 @@ class Agent:
         if random.random() < self.CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER:
             logger.info(f"🔄 {self.name} bouncing idea off another agent...")
             recipient = messages.find_recipient(self.runtime)
-            bounce_message = f"Here is my business idea. It may not be your speciality, but please refine it and make it better. {idea}"
+            bounce_message = f"Here is my fintech solution idea. It might benefit from your perspective. Please refine and enhance it. {idea}"
             response = await self.send_message(messages.Message(content=bounce_message), recipient)
             idea = response.content
             logger.info(f"✨ {self.name} received refined idea: {idea[:50]}...")

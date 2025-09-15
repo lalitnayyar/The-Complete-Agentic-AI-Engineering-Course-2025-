@@ -14,20 +14,18 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 class Agent:
-    """Creative entrepreneur agent for generating business ideas"""
+    """Data-driven marketing strategist agent focused on innovative campaign ideas"""
 
-    # Change this system message to reflect the unique characteristics of this agent
     system_message = """
-    You are a creative entrepreneur. Your task is to come up with a new business idea using Agentic AI, or refine an existing idea.
-    Your personal interests are in these sectors: Healthcare, Education.
-    You are drawn to ideas that involve disruption.
-    You are less interested in ideas that are purely automation.
-    You are optimistic, adventurous and have risk appetite. You are imaginative - sometimes too much so.
-    Your weaknesses: you're not patient, and can be impulsive.
-    You should respond with your business ideas in an engaging and clear way.
+    You are a savvy marketing strategist specializing in data-driven decision making. Your goal is to generate innovative marketing campaigns
+    that leverage AI and analytics to create real impact. Your main business interest lies in Retail and Technology sectors.
+    You prioritize strategies that involve customer personalization and engagement over pure cost-cutting automation.
+    You are analytical, resourceful, and persuasive. You are cautious about unproven ideas and prefer evidence-backed approaches.
+    Weaknesses include occasionally overanalyzing and delayed decisions.
+    When responding, provide clear, actionable, and creative marketing campaign concepts.
     """
 
-    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.5
+    CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER = 0.45
 
     def __init__(self, name) -> None:
         self.name = name
@@ -39,7 +37,7 @@ class Agent:
         message_tracker.register_agent(
             agent_id=name,
             name=name,
-            agent_type="entrepreneur"
+            agent_type="marketing_strategist"
         )
         
         self._delegate = AssistantAgent(
@@ -48,7 +46,7 @@ class Agent:
                 "model": "gpt-4.1-mini",
                 "api_key": os.getenv("OPENAI_API_KEY"),
                 "price": [0.00015, 0.0006],
-                "temperature": 0.7
+                "temperature": 0.65
             },
             system_message=self.system_message
         )
@@ -84,7 +82,7 @@ class Agent:
         exchange_id = message_tracker.start_message_exchange(
             originator_id=self.name,
             target_id=agent_id.key,
-            message_type="idea_exchange",
+            message_type="campaign_exchange",
             content=message.content
         )
         
@@ -117,23 +115,23 @@ class Agent:
             raise
 
     async def handle_message(self, message: messages.Message, ctx=None) -> messages.Message:
-        """Handle incoming messages and generate business ideas"""
+        """Handle incoming messages and generate marketing campaign ideas"""
         logger.info(f"📨 {self.name} received message: {message.content[:50]}...")
         
-        # Generate initial idea
+        # Generate initial marketing campaign idea
         response = self._delegate.generate_reply([{"role": "user", "content": message.content}])
-        idea = response
+        campaign_idea = response
         
-        logger.info(f"💡 {self.name} generated idea: {idea[:50]}...")
+        logger.info(f"💡 {self.name} generated campaign idea: {campaign_idea[:50]}...")
         
-        # Randomly bounce idea off another agent
+        # Randomly bounce idea off another agent for refinement
         if random.random() < self.CHANCES_THAT_I_BOUNCE_IDEA_OFF_ANOTHER:
-            logger.info(f"🔄 {self.name} bouncing idea off another agent...")
+            logger.info(f"🔄 {self.name} bouncing campaign idea off another agent...")
             recipient = messages.find_recipient(self.runtime)
-            bounce_message = f"Here is my business idea. It may not be your speciality, but please refine it and make it better. {idea}"
+            bounce_message = f"Here is a marketing campaign idea. It may not be your specialty, but please refine and enhance it: {campaign_idea}"
             response = await self.send_message(messages.Message(content=bounce_message), recipient)
-            idea = response.content
-            logger.info(f"✨ {self.name} received refined idea: {idea[:50]}...")
+            campaign_idea = response.content
+            logger.info(f"✨ {self.name} received refined campaign idea: {campaign_idea[:50]}...")
         
-        logger.info(f"📤 {self.name} returning final idea")
-        return messages.Message(content=idea)
+        logger.info(f"📤 {self.name} returning final campaign idea")
+        return messages.Message(content=campaign_idea)
